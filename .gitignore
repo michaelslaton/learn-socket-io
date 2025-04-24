@@ -16,6 +16,8 @@
 # misc
 /ws-b/server/node_modules
 /ws-b/client/node_modules
+/ws-c/server/node_modules
+/ws-c/client/node_modules
 .DS_Store
 .env.local
 .env.development.local

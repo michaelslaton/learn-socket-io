@@ -31,7 +31,7 @@ function App() {
 
     socket.on('playerScores', (playerScores)=>{
       setAllScores(playerScores);
-    })
+    });
   };
 
   return (
@@ -48,22 +48,24 @@ function App() {
       >
         Publish Score
       </button>
-      {allScores.length > 0 && <table>
-        <tr>
-        <th>Name</th>
-        <th>Score</th>
-        </tr>
-        <tbody>
-          {allScores.map((score)=>(
-            <tr>
-              <td>{score?.name}</td>
-              <td>{score?.score}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>}
+      {allScores.length > 0 &&
+        <table>
+          <tr>
+          <th>Name</th>
+          <th>Score</th>
+          </tr>
+          <tbody>
+            {allScores.map((score)=>(
+              <tr>
+                <td>{score?.name}</td>
+                <td>{score?.score}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      }
     </>
-  )
-}
+  );
+};
 
 export default App
