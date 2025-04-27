@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import io from 'socket.io-client';
 import './app.css';
+
+const socket = io('localhost:3000');
 
 function App() {
   const [formInputs, setFormInputs] = useState({name:'', age: '', phone: ''});
   const [ crudData, setCrudData] = useState({});
-  const socket = io('localhost:3000');
+  const [isEdit, setIsEdit] = useState(false);
+  
+  useEffect(()=>{
+    socket.on('crudData', (data)=>{
+      setCrudData(data);
+    })
+  },[]);
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -14,15 +23,21 @@ function App() {
   };
 
   const handleSubmit = () => {
-    socket.emit('data', formInputs);
+    socket.emit('data', { ...formInputs, id: uuidv4() });
+    
     setFormInputs({name:'', age: '', phone: ''})
   };
 
-  useEffect(()=>{
-    socket.on('crudData', (data)=>{
-      setCrudData(data);
-    })
-  },[])
+  const getEditData = (data) => {
+    setFormInputs(data)
+    setIsEdit(true);
+  }
+
+  const handleEdit = () => {
+    socket.emit('editData', formInputs);
+    setIsEdit(false);
+    setFormInputs({name:'', age: '', phone: ''})
+  }
 
   return (
     <>
@@ -51,7 +66,7 @@ function App() {
           value={formInputs.phone}
         />
 
-        <button onClick={handleSubmit}>Add Data</button>
+        <button onClick={() => isEdit ? handleEdit() : handleSubmit()}>{isEdit ? 'Edit' : 'Add'} Data</button>
       </div>
 
       <table>
@@ -60,6 +75,8 @@ function App() {
             <th>Name</th>
             <th>Age</th>
             <th>Phone Number</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -69,6 +86,16 @@ function App() {
                 <td>{data?.name}</td>
                 <td>{data?.age}</td>
                 <td>{data?.phone}</td>
+                <td>
+                  <button
+                    onClick={()=> getEditData(data)}
+                  >
+                    Edit
+                  </button>
+                </td>
+                <td>
+                  <button>Delete</button>
+                </td>
               </tr>
             ))
           }
