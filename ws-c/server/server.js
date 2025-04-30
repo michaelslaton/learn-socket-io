@@ -24,6 +24,13 @@ io.on('connection', (socket)=>{
     if(currentIndex !== -1) crudData[currentIndex] = {...crudData[currentIndex], ...response}
   })
 
+  socket.on('deleteData', (id)=>{
+    let currentIndex = crudData.findIndex((data)=> data.id === id);
+    if (currentIndex !== -1) {
+      crudData.splice(currentIndex,1);
+    }
+  });
+
   setInterval(()=>{
     socket.emit('crudData', crudData);
   }, 1000)

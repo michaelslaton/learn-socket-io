@@ -39,6 +39,10 @@ function App() {
     setFormInputs({name:'', age: '', phone: ''})
   }
 
+  const handleDelete = (id) => {
+    socket.emit('deleteData', id);
+  }
+
   return (
     <>
       <h1>Crud Operations</h1>
@@ -94,7 +98,7 @@ function App() {
                   </button>
                 </td>
                 <td>
-                  <button>Delete</button>
+                  <button onClick={()=> handleDelete(data.id)}>Delete</button>
                 </td>
               </tr>
             ))
